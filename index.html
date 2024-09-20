@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Футбольный Гол</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #E6E6FA; /* Лавандовый фон */
+        }
+
+        .field {
+            width: 400px;
+            height: 600px;
+            position: relative;
+            background-color: #32CD32; /* Зеленое поле */
+            border: 5px solid white;
+            box-shadow: 0 0 10px #000;
+        }
+
+        .goal {
+            width: 300px;
+            height: 100px;
+            border: 5px solid white;
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) perspective(400px) rotateX(15deg); /* 3D эффект */
+            background-color: rgba(255, 255, 255, 0.2); /* Легкий прозрачный цвет для объема */
+            box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5); /* Объемная тень */
+            background-image: linear-gradient(45deg, white 10%, transparent 10%), 
+                              linear-gradient(135deg, white 10%, transparent 10%);
+            background-size: 20px 20px; /* Сетка ворот */
+        }
+
+        .goalkeeper {
+            position: absolute;
+            top: 40px;
+            left: 130px;
+            font-size: 40px;
+            animation: move-glove 2s infinite ease-in-out;
+        }
+
+        .ball {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 50px;
+            cursor: pointer;
+        }
+
+        @keyframes move-glove {
+            0% {
+                left: 110px;
+            }
+            50% {
+                left: 150px;
+            }
+            100% {
+                left: 110px;
+            }
+        }
+
+        .goal-message {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #D8BFD8; /* Нежно-фиолетовый */
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #4B0082; /* Темно-фиолетовый цвет текста */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="field">
+        <div class="goal">
+            <div class="goalkeeper">🧤</div>
+        </div>
+        <div class="ball">⚽</div>
+        <div class="goal-message" id="goalMessage">ГОООООЛ! А еще, Ариша, ты невероятной красоты соска, обожаю!</div>
+    </div>
+
+    <script>
+        const ball = document.querySelector('.ball');
+        const goal = document.querySelector('.goal');
+        const goalMessage = document.getElementById('goalMessage');
+
+        ball.addEventListener('click', () => {
+            let positionX = 50; // начальная позиция по X (в процентах)
+            let positionY = 30; // начальная позиция по Y (в пикселях)
+            const interval = setInterval(() => {
+                positionX += 0.6; // большее смещение вправо для увеличения скорости
+                positionY += 9; // ускорение движения мяча по вертикали
+                ball.style.left = positionX + '%'; 
+                ball.style.bottom = positionY + 'px';
+
+                // Получаем координаты и размеры ворот
+                const goalRect = goal.getBoundingClientRect();
+                const ballRect = ball.getBoundingClientRect();
+
+                // Проверяем, находится ли мяч внутри ворот по X и Y
+                if (
+                    ballRect.left >= goalRect.left &&
+                    ballRect.right <= goalRect.right &&
+                    ballRect.bottom <= goalRect.bottom
+                ) {
+                    clearInterval(interval);
+                    goalMessage.style.display = 'block'; // показать сообщение "Гол"
+                }
+            }, 7); // уменьшенное время между шагами анимации для увеличения скорости
+        });
+    </script>
+
+</body>
+</html>
